@@ -1,6 +1,6 @@
 package controller;
 
-import model.betVO;
+import model.BetVO;
 import repository.BetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class BetController {
     private BetRepository betRepository;
 
     @GetMapping("/all")
-    public List<betVO> getAllBets() {
+    public List<BetVO> getAllBets() {
         return betRepository.findAll();
     }
 }
