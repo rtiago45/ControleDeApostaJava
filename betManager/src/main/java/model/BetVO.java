@@ -10,6 +10,7 @@ public class BetVO {
     private double value;
     private double odd;
     private String betStyle = "S";
+    private boolean green;
     private Game game; 
 
     public double getValue() {
@@ -43,4 +44,12 @@ public class BetVO {
     public void setGame(Game game) {
         this.game = game;
     }
+
+	public boolean isGreen() {
+		return green;
+	}
+
+	public void setGreen(boolean green) {
+		this.green = green;
+	}
 }
