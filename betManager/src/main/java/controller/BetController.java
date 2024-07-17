@@ -1,9 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;<<<<<<<HEAD
 import java.util.Optional;
 
+=======>>>>>>>446301 c4af3d50eb006c8d7ebc9fb63b9ce4032f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import model.BetVO;
 import model.Game;
 import model.MultipleBetVO;
@@ -29,6 +29,7 @@ public class BetController {
 	@Autowired
 	private BetRepository betRepository;
 
+	<<<<<<<HEAD
 	@Autowired
 	private MultipleBetRepository multipleBetRepository;
 
@@ -66,16 +67,16 @@ public class BetController {
 
 				if (multipleBetVO.getGame() != null) {
 					existingBet.setGame(multipleBetVO.getGame());
-					
-					if(multipleBetVO.getGame().getTeams() != null) {
+
+					if (multipleBetVO.getGame().getTeams() != null) {
 						existingBet.getGame().setTeams(multipleBetVO.getGame().getTeams());
 					}
-					
-					if(multipleBetVO.getGame().getCompetition() != null) {
+
+					if (multipleBetVO.getGame().getCompetition() != null) {
 						existingBet.getGame().setCompetition(multipleBetVO.getGame().getCompetition());
 					}
-					
-					if(multipleBetVO.getGame().getEntrances() != null) {
+
+					if (multipleBetVO.getGame().getEntrances() != null) {
 						ArrayList<OneEntranceDetail> entranceList = new ArrayList<OneEntranceDetail>();
 						for (OneEntranceDetail entrance : multipleBetVO.getGame().getEntrances()) {
 							entranceList.add(entrance);
@@ -86,15 +87,15 @@ public class BetController {
 				if (multipleBetVO.getGames() != null) {
 					existingBet.setGames(multipleBetVO.getGames());
 					for (Game game : multipleBetVO.getGames()) {
-						if(game.getTeams() != null) {
+						if (game.getTeams() != null) {
 							existingBet.getGame().setTeams(game.getTeams());
 						}
-						
-						if(game.getCompetition() != null) {
+
+						if (game.getCompetition() != null) {
 							existingBet.getGame().setCompetition(game.getCompetition());
 						}
-						
-						if(game.getEntrances() != null) {
+
+						if (game.getEntrances() != null) {
 							ArrayList<OneEntranceDetail> entranceList = new ArrayList<OneEntranceDetail>();
 							for (OneEntranceDetail entrance : game.getEntrances()) {
 								entranceList.add(entrance);
@@ -114,8 +115,6 @@ public class BetController {
 				if (multipleBetVO.isGreen() != existingBet.isGreen()) {
 					existingBet.setGreen(multipleBetVO.isGreen());
 				}
-				
-				
 
 				multipleBetRepository.save(existingBet);
 				return new ResponseEntity<>("Aposta atualizada com sucesso!", HttpStatus.OK);
@@ -127,4 +126,40 @@ public class BetController {
 		}
 	}
 
+	=======
+
+	@GetMapping("/all")
+	public List<BetVO> getAllBets() {
+		return betRepository.findAll();
+	}
+
+	@PostMapping("/insertSimpleBet")
+	public ResponseEntity<String> insertBetSimpleBet(@RequestBody BetVO bet) {
+		try {
+			BetVO savedBet = betRepository.save(bet);
+			return new ResponseEntity<>("Aposta simples criada com sucesso!", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Erro ao criar aposta simples: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/insertMultiple")
+	public ResponseEntity<String> insertMultiple(@RequestBody MultipleBetVO multipleBetVO) {
+		try {
+			betRepository.insert(multipleBetVO);
+			return new ResponseEntity<>("Aposta criada com sucesso!", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Erro ao tentar inserir aposta multipla.", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/deleteBet/{id}")
+    public ResponseEntity<String> deleteBet(@PathVariable String id) {
+        try {
+            betRepository.deleteById(id);
+            return new ResponseEntity<>("Aposta deletada com sucesso!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Erro ao tentar deletar aposta.", HttpStatus.BAD_REQUEST);
+        }
+    }>>>>>>>446301 c4af3d50eb006c8d7ebc9fb63b9ce4032f
 }
