@@ -1,10 +1,8 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;<<<<<<<HEAD
+import java.util.List;
 import java.util.Optional;
-
-=======>>>>>>>446301 c4af3d50eb006c8d7ebc9fb63b9ce4032f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,6 @@ public class BetController {
 	@Autowired
 	private BetRepository betRepository;
 
-	<<<<<<<HEAD
 	@Autowired
 	private MultipleBetRepository multipleBetRepository;
 
@@ -126,13 +123,6 @@ public class BetController {
 		}
 	}
 
-	=======
-
-	@GetMapping("/all")
-	public List<BetVO> getAllBets() {
-		return betRepository.findAll();
-	}
-
 	@PostMapping("/insertSimpleBet")
 	public ResponseEntity<String> insertBetSimpleBet(@RequestBody BetVO bet) {
 		try {
@@ -153,13 +143,4 @@ public class BetController {
 		}
 	}
 
-	@PostMapping("/deleteBet/{id}")
-    public ResponseEntity<String> deleteBet(@PathVariable String id) {
-        try {
-            betRepository.deleteById(id);
-            return new ResponseEntity<>("Aposta deletada com sucesso!", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Erro ao tentar deletar aposta.", HttpStatus.BAD_REQUEST);
-        }
-    }>>>>>>>446301 c4af3d50eb006c8d7ebc9fb63b9ce4032f
 }
