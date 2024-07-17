@@ -133,14 +133,4 @@ public class BetController {
 		}
 	}
 
-	@PostMapping("/insertMultiple")
-	public ResponseEntity<String> insertMultiple(@RequestBody MultipleBetVO multipleBetVO) {
-		try {
-			betRepository.insert(multipleBetVO);
-			return new ResponseEntity<>("Aposta criada com sucesso!", HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>("Erro ao tentar inserir aposta multipla.", HttpStatus.BAD_REQUEST);
-		}
-	}
-
 }
