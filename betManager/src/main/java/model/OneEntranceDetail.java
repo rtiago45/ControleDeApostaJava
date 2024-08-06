@@ -1,14 +1,21 @@
 package model;
 
+import java.util.List;
+
 public class OneEntranceDetail {
-	private String description;
-	
-	public String getDescription() {
-		return description;
+	private String multipleOrSimple;
+
+	public OneEntranceDetail() {}
+
+	public OneEntranceDetail(String multipleOrSimple) {
+		this.multipleOrSimple = multipleOrSimple;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public String getMultipleOrSimple() {
+		return multipleOrSimple;
 	}
 
+	public void setMultipleOrSimple(String multipleOrSimple) {
+		this.multipleOrSimple = multipleOrSimple;
+	}
 }

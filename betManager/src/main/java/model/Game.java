@@ -3,17 +3,17 @@ package model;
 import java.util.List;
 
 public class Game {
-    private String[] teams;
-    private String competition; 
-    private List<OneEntranceDetail> entrances;
+	private String[] teams;
+	private String competition;
+	private List<OneEntranceDetail> entrances;
 
-    public List<OneEntranceDetail> getEntrances() {
-        return entrances;
-    }
+	public Game() {}
 
-    public void setEntrances(List<OneEntranceDetail> entrances) {
-        this.entrances = entrances;
-    }
+	public Game(String[] teams, String competition, List<OneEntranceDetail> entrances) {
+		this.teams = teams;
+		this.competition = competition;
+		this.entrances = entrances;
+	}
 
 	public String[] getTeams() {
 		return teams;
@@ -29,5 +29,13 @@ public class Game {
 
 	public void setCompetition(String competition) {
 		this.competition = competition;
+	}
+
+	public List<OneEntranceDetail> getEntrances() {
+		return entrances;
+	}
+
+	public void setEntrances(List<OneEntranceDetail> entrances) {
+		this.entrances = entrances;
 	}
 }

@@ -129,7 +129,6 @@ public class BetControllerTest {
         Game game = new Game();
         ArrayList<Game> gamesList = new ArrayList<>();
         OneEntranceDetail oneEntrance = new OneEntranceDetail();
-        oneEntrance.setDescription("Teste");
         ArrayList<OneEntranceDetail> entranceList = new ArrayList<>();
         entranceList.add(oneEntrance);
         game.setEntrances(entranceList);

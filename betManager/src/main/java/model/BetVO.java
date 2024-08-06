@@ -9,9 +9,28 @@ public class BetVO {
     private String id;
     private double value;
     private double odd;
-    private String betStyle = "S";
+    private String betStyle;
     private boolean green;
-    private Game game; 
+    private Game game;
+
+    public BetVO() {}
+
+    public BetVO(String id, double value, double odd, String betStyle, boolean green, Game game) {
+        this.id = id;
+        this.value = value;
+        this.odd = odd;
+        this.betStyle = betStyle;
+        this.green = green;
+        this.game = game;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public double getValue() {
         return value;
@@ -37,6 +56,14 @@ public class BetVO {
         this.betStyle = betStyle;
     }
 
+    public boolean isGreen() {
+        return green;
+    }
+
+    public void setGreen(boolean green) {
+        this.green = green;
+    }
+
     public Game getGame() {
         return game;
     }
@@ -44,12 +71,4 @@ public class BetVO {
     public void setGame(Game game) {
         this.game = game;
     }
-
-	public boolean isGreen() {
-		return green;
-	}
-
-	public void setGreen(boolean green) {
-		this.green = green;
-	}
 }

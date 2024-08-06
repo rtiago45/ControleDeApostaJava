@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import model.BetVO;
 import model.Game;
 import model.MultipleBetVO;
-import model.OneEntranceDetail;
 import repository.BetRepository;
 import repository.MultipleBetRepository;
 
@@ -41,9 +41,9 @@ public class BetController {
 	public ResponseEntity<String> insertMultipleBet(@RequestBody MultipleBetVO multipleBetVO) {
 		try {
 			multipleBetRepository.insert(multipleBetVO);
-			return new ResponseEntity<String>("Aposta criada com sucesso!", HttpStatus.OK);
+			return new ResponseEntity<>("Aposta criada com sucesso!", HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Erro ao tentar inserir aposta multipla.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Erro ao tentar inserir aposta múltipla.", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -75,14 +75,12 @@ public class BetController {
 						existingBet.getGame().setCompetition(multipleBetVO.getGame().getCompetition());
 					}
 
+					// Atualizar o campo entrances como String
 					if (multipleBetVO.getGame().getEntrances() != null) {
-						ArrayList<OneEntranceDetail> entranceList = new ArrayList<OneEntranceDetail>();
-						for (OneEntranceDetail entrance : multipleBetVO.getGame().getEntrances()) {
-							entranceList.add(entrance);
-						}
-						existingBet.getGame().setEntrances(entranceList);
+						existingBet.getGame().setEntrances(multipleBetVO.getGame().getEntrances());
 					}
 				}
+
 				if (multipleBetVO.getGames() != null) {
 					existingBet.setGames(multipleBetVO.getGames());
 					for (Game game : multipleBetVO.getGames()) {
@@ -94,15 +92,13 @@ public class BetController {
 							existingBet.getGame().setCompetition(game.getCompetition());
 						}
 
+						// Atualizar o campo entrances como String
 						if (game.getEntrances() != null) {
-							ArrayList<OneEntranceDetail> entranceList = new ArrayList<OneEntranceDetail>();
-							for (OneEntranceDetail entrance : game.getEntrances()) {
-								entranceList.add(entrance);
-							}
-							existingBet.getGame().setEntrances(entranceList);
+							existingBet.getGame().setEntrances(game.getEntrances());
 						}
 					}
 				}
+
 				if (multipleBetVO.getOdd() != 0) {
 					existingBet.setOdd(multipleBetVO.getOdd());
 				}
@@ -114,25 +110,27 @@ public class BetController {
 				if (multipleBetVO.isGreen() != existingBet.isGreen()) {
 					existingBet.setGreen(multipleBetVO.isGreen());
 				}
-
 				multipleBetRepository.save(existingBet);
 				return new ResponseEntity<>("Aposta atualizada com sucesso!", HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("Aposta não encontrada.", HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>("Erro ao tentar atualizar aposta.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Erro ao tentar atualizar aposta: " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping("/insertSimpleBet")
-	public ResponseEntity<String> insertBetSimpleBet(@RequestBody BetVO bet) {
+	public ResponseEntity<String> insertSimpleBet(@RequestBody BetVO bet) {
 		try {
 			BetVO savedBet = betRepository.save(bet);
-			return new ResponseEntity<>("Aposta simples criada com sucesso!", HttpStatus.OK);
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body("{\"message\": \"Aposta simples criada com sucesso!\"}");
 		} catch (Exception e) {
-			return new ResponseEntity<>("Erro ao criar aposta simples: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.contentType(MediaType.APPLICATION_JSON)
+					.body("{\"message\": \"Erro ao criar aposta simples: " + e.getMessage() + "\"}");
 		}
 	}
-
 }
