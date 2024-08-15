@@ -5,21 +5,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "person")
 public class Person {
+
+    public static final String SEQUENCE_NAME = "users_sequence";
+
     @Id
     private String id;
     private double saldoInicial;
     private double saldoAtual;
     private String estiloDeAposta;
-    private double stakeRecomendada;
+    private String name;
 
     public Person() {}
 
-    public Person(String id, double saldoInicial, double saldoAtual, String estiloDeAposta, double stakeRecomendada) {
+    public Person(String id, double saldoInicial, String estiloDeAposta, String name) {
         this.id = id;
         this.saldoInicial = saldoInicial;
-        this.saldoAtual = saldoAtual;
         this.estiloDeAposta = estiloDeAposta;
-        this.stakeRecomendada = stakeRecomendada;
+        this.name = name;
     }
 
     public String getId() {
@@ -38,14 +40,6 @@ public class Person {
         this.saldoInicial = saldoInicial;
     }
 
-    public double getSaldoAtual() {
-        return saldoAtual;
-    }
-
-    public void setSaldoAtual(double saldoAtual) {
-        this.saldoAtual = saldoAtual;
-    }
-
     public String getEstiloDeAposta() {
         return estiloDeAposta;
     }
@@ -54,11 +48,20 @@ public class Person {
         this.estiloDeAposta = estiloDeAposta;
     }
 
-    public double getStakeRecomendada() {
-        return stakeRecomendada;
+    public void setSaldoAtual(double saldoAtual) {
+        this.saldoAtual = saldoAtual;
     }
 
-    public void setStakeRecomendada(double stakeRecomendada) {
-        this.stakeRecomendada = stakeRecomendada;
+    public double getSaldoAtual() {
+        return saldoAtual;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

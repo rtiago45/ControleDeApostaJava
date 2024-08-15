@@ -29,4 +29,16 @@ public class PersonService {
     public void deleteById(String id) {
         personRepository.deleteById(id);
     }
+
+    public Person updateSaldoAtual(String personId, double winnings) {
+        Optional<Person> optionalPerson = personRepository.findById(personId);
+        if (optionalPerson.isPresent()) {
+            Person person = optionalPerson.get();
+            person.setSaldoAtual(person.getSaldoAtual() + winnings);
+            return personRepository.save(person);
+        } else {
+            throw new RuntimeException("Person not found");
+        }
+    }
+
 }

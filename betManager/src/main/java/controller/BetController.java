@@ -3,6 +3,8 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,9 @@ import model.Game;
 import model.MultipleBetVO;
 import repository.BetRepository;
 import repository.MultipleBetRepository;
+import repository.PersonRepository;
+import service.PersonService;
+import service.SequenceGeneratorService;
 
 @RestController
 @RequestMapping("/bets")
@@ -31,6 +36,12 @@ public class BetController {
 
 	@Autowired
 	private MultipleBetRepository multipleBetRepository;
+
+	@Autowired
+	private SequenceGeneratorService sequenceGeneratorService;
+
+	@Autowired
+	private PersonService personService;
 
 	@GetMapping("/all")
 	public List<BetVO> getAllBets() {
@@ -121,16 +132,34 @@ public class BetController {
 	}
 
 	@PostMapping("/insertSimpleBet")
-	public ResponseEntity<String> insertSimpleBet(@RequestBody BetVO bet) {
+	public ResponseEntity<BetVO> insertSimpleBet(@RequestBody BetVO bet) {
 		try {
+			// Gerar ID para a aposta
+			long generatedId = sequenceGeneratorService.generateSequence(BetVO.SEQUENCE_NAME);
+			bet.setId(Long.toString(generatedId));
+
+			// Salvar a aposta
 			BetVO savedBet = betRepository.save(bet);
+
+
+			// Calcular o valor ganho: value * odd
+			double winnings = bet.getValue() * bet.getOdd();
+
+			try {
+				personService.updateSaldoAtual("1", winnings);
+			} catch (RuntimeException e) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.contentType(MediaType.APPLICATION_JSON)
+						.body(null);
+			}
+
 			return ResponseEntity.ok()
 					.contentType(MediaType.APPLICATION_JSON)
-					.body("{\"message\": \"Aposta simples criada com sucesso!\"}");
+					.body(savedBet);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.contentType(MediaType.APPLICATION_JSON)
-					.body("{\"message\": \"Erro ao criar aposta simples: " + e.getMessage() + "\"}");
+					.body(null);
 		}
 	}
 }

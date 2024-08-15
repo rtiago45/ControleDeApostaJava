@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "bet")
 public class BetVO {
+
+    public static final String SEQUENCE_NAME = "bets_sequence";
+
     @Id
     private String id;
     private double value;
