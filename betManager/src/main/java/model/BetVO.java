@@ -3,6 +3,8 @@ package model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document(collection = "bet")
 public class BetVO {
 
@@ -13,8 +15,9 @@ public class BetVO {
     private double value;
     private double odd;
     private String betStyle;
-    private boolean green;
+    private boolean greenOrRed;
     private Game game;
+    private Date date;
 
     public BetVO() {}
 
@@ -23,7 +26,7 @@ public class BetVO {
         this.value = value;
         this.odd = odd;
         this.betStyle = betStyle;
-        this.green = green;
+        this.greenOrRed = greenOrRed;
         this.game = game;
     }
 
@@ -59,12 +62,12 @@ public class BetVO {
         this.betStyle = betStyle;
     }
 
-    public boolean isGreen() {
-        return green;
+    public Boolean isGreenOrRed() {
+        return greenOrRed;
     }
 
-    public void setGreen(boolean green) {
-        this.green = green;
+    public void setGreenOrRed(boolean greenOrRed) {
+        this.greenOrRed = greenOrRed;
     }
 
     public Game getGame() {
@@ -73,5 +76,13 @@ public class BetVO {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

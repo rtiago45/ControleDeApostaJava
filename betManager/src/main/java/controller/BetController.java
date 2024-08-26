@@ -1,6 +1,8 @@
 package controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,9 +120,7 @@ public class BetController {
 					existingBet.setValue(multipleBetVO.getValue());
 				}
 
-				if (multipleBetVO.isGreen() != existingBet.isGreen()) {
-					existingBet.setGreen(multipleBetVO.isGreen());
-				}
+
 				multipleBetRepository.save(existingBet);
 				return new ResponseEntity<>("Aposta atualizada com sucesso!", HttpStatus.OK);
 			} else {
@@ -131,6 +131,58 @@ public class BetController {
 		}
 	}
 
+	@GetMapping("/lastBetId")
+	public ResponseEntity<String> getLastBetId() {
+		try {
+			List<BetVO> bets = betRepository.findAll();
+			if (bets.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.contentType(MediaType.APPLICATION_JSON)
+						.body("No bets found");
+			}
+			BetVO lastBet = bets.stream()
+					.max((bet1, bet2) -> Long.compare(Long.parseLong(bet1.getId()), Long.parseLong(bet2.getId())))
+					.orElseThrow();
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(lastBet.getId());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.contentType(MediaType.APPLICATION_JSON)
+					.body("Error retrieving last bet ID");
+		}
+	}
+
+	@GetMapping("/averageOdd")
+	public ResponseEntity<String> getAverageOdd() {
+		try {
+			List<BetVO> bets = betRepository.findAll();
+			if (bets.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.contentType(MediaType.APPLICATION_JSON)
+						.body(null);
+			}
+			double averageOdd = bets.stream()
+					.mapToDouble(BetVO::getOdd)
+					.average()
+					.orElse(0.0);
+
+			// Add 1 to the average odd
+			averageOdd += 1;
+
+			DecimalFormat df = new DecimalFormat("#.##");
+			String formattedAverageOdd = df.format(averageOdd).replace(",", ".");
+
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(formattedAverageOdd);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(null);
+		}
+	}
+
 	@PostMapping("/insertSimpleBet")
 	public ResponseEntity<BetVO> insertSimpleBet(@RequestBody BetVO bet) {
 		try {
@@ -138,12 +190,29 @@ public class BetController {
 			long generatedId = sequenceGeneratorService.generateSequence(BetVO.SEQUENCE_NAME);
 			bet.setId(Long.toString(generatedId));
 
+			if (bet.getDate() == null) {
+				bet.setDate(new Date());
+			}
+
 			// Salvar a aposta
 			BetVO savedBet = betRepository.save(bet);
 
-
-			// Calcular o valor ganho: value * odd
-			double winnings = bet.getValue() * bet.getOdd();
+			// Calcular o valor ganho ou perdido
+			double winnings;
+			if (bet.isGreenOrRed()) {
+				winnings = bet.getValue() * bet.getOdd();
+				System.out.println("Winnings: " + winnings);
+			} else {
+				Optional<Person> personOptional = personService.findById("1");
+				if (personOptional.isPresent()) {
+					Person person = personOptional.get();
+					winnings = person.getSaldoAtual() - bet.getValue();
+				} else {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.contentType(MediaType.APPLICATION_JSON)
+							.body(null);
+				}
+			}
 
 			try {
 				personService.updateSaldoAtual("1", winnings);
